@@ -19,7 +19,7 @@ jobs:
         run: dotnet new classlib
 
       - name: Build package
-        run: dotnet pack
+        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }}
 
       - name: Publish package
         run: dotnet nuget push bin/Debug/*.nupkg
