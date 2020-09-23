@@ -1,6 +1,9 @@
 on:
   push:
 
+env:
+  VERSION: 1.0.0-g${{ github.sha }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,7 +22,7 @@ jobs:
         run: dotnet new classlib
 
       - name: Build package
-        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }}
+        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }}
 
       - name: Publish package
         run: dotnet nuget push bin/Debug/*.nupkg
