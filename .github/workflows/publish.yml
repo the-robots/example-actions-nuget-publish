@@ -29,7 +29,7 @@ jobs:
         run: dotnet new classlib
         
       - name: Add NuGetPublish.cs
-        run: echo 'public class NuGetPublish { public static void SayHello() { System.Console.WriteLine("Hello from nuget-publish!"); } }' > Add NuGetPublish.cs
+        run: echo 'public class NuGetPublish { public static void SayHello() { System.Console.WriteLine("Hello from nuget-publish!"); } }' > NuGetPublish.cs
 
       - name: Build package
         run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.NBGV_SemVer2 }}
