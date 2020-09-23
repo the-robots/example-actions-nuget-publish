@@ -19,7 +19,7 @@ jobs:
         run: dotnet new classlib
 
       - name: Build package
-        run: dotnet nuget pack
+        run: dotnet pack
 
       - name: Publish package
         run: dotnet nuget push
