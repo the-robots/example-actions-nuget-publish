@@ -33,3 +33,7 @@ jobs:
 
       - name: Publish package
         run: dotnet nuget push bin/Debug/*.nupkg
+
+      - run: gh api repos/${{ github.repository_owner }}/nuget-install/dispatches <<< '{"event_type":"build"}' --input -
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
