@@ -3,6 +3,7 @@ on:
 
 env:
   DOTNET_NOLOGO: true
+  VERSION: "1.1.${{ github.run_number }}"
 
 jobs:
   build:
@@ -11,12 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - uses: dotnet/nbgv@v0.3.1
-        with:
-          setAllVars: true
 
       - uses: actions/setup-dotnet@v1
         with:
@@ -32,7 +27,7 @@ jobs:
         run: echo 'public class NuGetPublish { public static void SayHello() { System.Console.WriteLine("Hello from nuget-publish!"); } }' > NuGetPublish.cs
 
       - name: Build package
-        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.NBGV_SemVer2 }}
+        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }}
 
       - name: Publish package
         run: dotnet nuget push bin/Debug/*.nupkg
