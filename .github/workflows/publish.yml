@@ -27,6 +27,9 @@ jobs:
 
       - name: Create a .NET Core class library project
         run: dotnet new classlib
+        
+      - name: Add NuGetPublish.cs
+        run: echo 'public class NuGetPublish { static void SayHello() { System.Console.WriteLine("Hello from nuget-publish!"); } }' > Program.cs
 
       - name: Build package
         run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.NBGV_SemVer2 }}
