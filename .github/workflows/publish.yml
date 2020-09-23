@@ -1,15 +1,16 @@
 on:
   push:
 
-env:
-  VERSION: 1.0.0-g${{ github.sha }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+
+      - uses: dotnet/nbgv@v0.3.1
+        with:
+          setAllVars: true
 
       - uses: actions/setup-dotnet@v1
         with:
@@ -22,7 +23,7 @@ jobs:
         run: dotnet new classlib
 
       - name: Build package
-        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }}
+        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.NBGV_SemVer2 }}
 
       - name: Publish package
         run: dotnet nuget push bin/Debug/*.nupkg
