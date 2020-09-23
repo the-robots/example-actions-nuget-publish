@@ -1,6 +1,9 @@
 on:
   push:
 
+env:
+  DOTNET_NOLOGO: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
