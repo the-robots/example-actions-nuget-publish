@@ -27,7 +27,7 @@ jobs:
         run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }}
 
       - name: Publish package
-        run: dotnet nuget push bin/Debug/*.nupkg -k ${{ github.token }} -s https://nuget.pkg.github.com/${{ github.repository_owner }}
+        run: dotnet nuget push bin/Debug/*.nupkg --api-key ${{ github.token }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}
 
       - run: gh api repos/${{ github.repository_owner }}/nuget-install/dispatches <<< '{"event_type":"build"}' --input -
         env:
