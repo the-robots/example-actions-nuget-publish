@@ -6,7 +6,35 @@ env:
   VERSION: "1.1.${{ github.run_number }}"
 
 jobs:
-  build:
+  publish-using-api-key:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout        
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+          source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+
+      - name: Create a .NET Core class library project
+        run: dotnet new classlib
+        
+      - name: Add NuGetPublish.cs
+        run: echo 'public class NuGetPublish { public static void SayHello() { System.Console.WriteLine("Hello from ${{ github.repository }}!"); } }' > NuGetPublish.cs
+
+      - name: Build package
+        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }}
+
+      - name: Publish package
+        run: dotnet nuget push bin/Debug/*.nupkg -k ${{ github.token }}
+
+      - run: gh api repos/${{ github.repository_owner }}/nuget-install/dispatches <<< '{"event_type":"build"}' --input -
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+  publish-using-basic-auth:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +55,7 @@ jobs:
         run: echo 'public class NuGetPublish { public static void SayHello() { System.Console.WriteLine("Hello from ${{ github.repository }}!"); } }' > NuGetPublish.cs
 
       - name: Build package
-        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }}
+        run: dotnet pack -p:RepositoryUrl=https://github.com/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }}-basic-auth
 
       - name: Publish package
         run: dotnet nuget push bin/Debug/*.nupkg
