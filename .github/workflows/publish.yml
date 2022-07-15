@@ -37,5 +37,6 @@ jobs:
         run: dotnet nuget push bin/Debug/*.nupkg
 
       - run: gh api repos/${{ github.repository_owner }}/nuget-install/dispatches <<< '{"event_type":"build"}' --input -
+        if: ${{ env.REPO_TOKEN != null }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
