@@ -5,6 +5,7 @@ on:
 env:
   DOTNET_NOLOGO: true
   VERSION: "1.1.${{ github.run_number }}"
+  PACKAGES_URL: https://nuget.pkg.github.com
 
 jobs:
   build:
@@ -32,7 +33,7 @@ jobs:
         run: dotnet pack -p:RepositoryUrl=${{ github.server_url }}/${{ github.repository }} -p:PackageVersion=${{ env.VERSION }} --output .
 
       - name: Publish package
-        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source ${{ env.PACKAGES_URL }}/${{ github.repository_owner }}/index.json
 
       - run: gh api repos/${{ github.repository_owner }}/nuget-install/dispatches <<< '{"event_type":"build"}' --input -
         if: ${{ env.REPO_TOKEN != null }}
